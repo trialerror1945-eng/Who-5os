@@ -1,4 +1,4 @@
-# Which feet deserve the Doppler? Derivation and internal validation of a no-equipment clinical risk score to triage ankle–brachial index and monofilament testing in resource-limited primary care
+# Which feet deserve the Doppler? A no-equipment triage score for ankle–brachial index and monofilament testing under fixed examination capacity
 
 **Running title:** A no-equipment triage score for lower-extremity disease
 
@@ -32,28 +32,30 @@ against the "test everyone with diabetes" heuristic. Score strata were
 anchored to mortality through 31 December 2019.
 
 **Findings.** Of 8080 eligible adults, 1813 (22·4%) had lower-extremity
-disease; the survey-weighted prevalence was 16·97% (95% CI 15·89–18·05), with
-PAD at 5·23% (4·67–5·79). Version A achieved an optimism-corrected AUC of
-0·739 (95% CI 0·727–0·752) with a calibration slope of 0·986 and
-calibration-in-the-large of 0·000. Adding laboratory tests changed the AUC by
-0·001 (Version B 0·740, 0·728–0·753). A gradient-boosting benchmark on the
-same predictors was *worse* (0·725). The integer score cost 0·010 of AUC
-(0·729) and stratified observed risk from 5·6% to 42·3% across five bands.
-The score exceeded the "test everyone with diabetes" rule at 23 of 23
-threshold probabilities examined, and the "test everyone aged ≥60" rule at 23
-of 23. Notably, 1402 of 1813 cases (77·3%) occurred in participants *without*
-diagnosed diabetes and are therefore unreachable by the current heuristic at
-any threshold. Over a median 16·2 years, cardiovascular mortality rose from
-1·1 to 29·5 per 1000 person-years across score bands (adjusted HR per point
-1·238, 95% CI 1·197–1·280).
+disease; survey-weighted prevalence was 16·97% (95% CI 15·89–18·05). Version A
+achieved an optimism-corrected AUC of 0·739 (95% CI 0·727–0·752), calibration
+slope 0·986. **Under a 20% examination ceiling the score found 636 cases
+against 428 for the diabetes rule (+208, +48%); the diabetes rule required
+double the capacity to match what the score found at 20%.** Efficiency was
+46·3 against 31·2 cases per 100 examinations. A published NHANES PAD model
+(Zhang 2016), refitted here, performed closely behind the score (607 cases at
+20% capacity; AUC 0·722 on the composite, 0·790 on PAD alone against our 0·797)
+and also beat the diabetes rule — risk-based triage, not this particular
+score, is what separates from current practice. Leg symptoms were near-useless
+for triage: 88·1% of cases reported no leg pain, and the symptom item alone had
+an AUC of 0·506. Adding laboratory tests changed the AUC by 0·001; gradient
+boosting was worse (0·725). Over a median 16·2 years cardiovascular mortality
+rose from 1·1 to 29·5 per 1000 person-years across score bands (adjusted HR per
+point 1·238, 95% CI 1·197–1·280).
 
-**Interpretation.** A nine-variable score requiring no device, no laboratory
-and under three minutes outperforms the triage rules currently used in
-practice, and identifies a large population of undiagnosed disease that a
-diabetes-based rule cannot reach by construction. One prespecified target was
-not met: achieving ≥0·85 sensitivity requires examining 65·7% of attendees,
-not the ≤40% we had hoped for. We report this as found. The score reorders a
-queue well; it does not shorten it as much as we intended.
+**Interpretation.** Where examination capacity is rationed, the order of the
+queue is a clinical decision currently made by a rule that finds barely more
+disease than examining people at random. Any risk-based ordering — ours or an
+existing published model — substantially outperforms it, and the case for
+abandoning diabetes status as the triage rule does not rest on adopting our
+particular score. One prespecified target was not met: reaching 85%
+sensitivity requires examining 65·7% of attendees, not the ≤40% intended. We
+report this as found.
 
 **Funding.** None.
 
@@ -73,23 +75,27 @@ recorded at health-centre level, (ii) targets an objectively measured
 *composite* of ABI and monofilament findings rather than either alone, and
 (iii) is tested explicitly against the heuristic clinicians actually use.
 
-**Added value of this study.** We derive such a score and subject it to the
-third test directly. It is the third element that matters: a triage tool must
-beat current practice, not the strawmen of "test everyone" and "test no one"
-that decision-curve analyses usually plot. The score does beat it, across the
-entire practical threshold range, and the reason is quantified: more than
-three-quarters of prevalent disease sits outside diagnosed diabetes. We also
-report two negative findings that the literature under-reports — a laboratory
-adds essentially nothing (ΔAUC 0·001), and gradient boosting is worse than
-penalised logistic regression on the same variables.
+**Added value of this study.** We evaluate triage the way a clinic
+experiences it — under a fixed ceiling on examinations — rather than only on
+discrimination or on decision-curve thresholds. Under that framing the gap
+between risk-based ordering and the diabetes heuristic is large and concrete:
++208 cases at 20% capacity, with the heuristic needing double the capacity to
+catch up. We also refit the closest published NHANES PAD model on the same
+participants and report that it, too, beats the heuristic — a finding that
+argues against current practice more broadly than it argues for our score. Two
+further negatives are reported that the literature under-reports: a laboratory
+adds 0·001 of AUC, and gradient boosting is worse than penalised logistic
+regression on the same variables. Finally, we test the field's founding
+assumption in its own data and find that asking about leg symptoms has an AUC
+of 0·506.
 
-**Implications of all the available evidence.** Where examination capacity is
-rationed, the ordering of that queue is a clinical decision that currently
-has no evidence behind it. This score provides one, on a single printed page,
-computable without equipment. It should be externally validated in the
-setting it is designed for before deployment; the USPSTF position on
-population screening is not in tension with it, because the question here is
-allocation among attendees rather than whether to screen a population.
+**Implications of all the available evidence.** The actionable message is not
+"use this score" but "stop using diabetes status to decide whose feet get
+examined." Where a score is wanted, this one needs no device, no laboratory
+and no race term, fits on one page, and carries a 16-year mortality gradient.
+External validation in the intended setting is required before deployment; the
+USPSTF position on population screening is not in tension with it, because the
+question here is allocation among attendees rather than whether to screen.
 
 ---
 
@@ -257,13 +263,50 @@ aged ≥60**. The last two are the rules in actual use and constitute the real
 test. The operating threshold was chosen as the lowest examination burden
 achieving sensitivity ≥0·85, with burden and number needed to test reported.
 
-### 2.9 Subgroups
+### 2.9 Evaluation under a capacity ceiling
+
+Decision-curve analysis prices a false positive against a true positive at an
+exchange rate set by the threshold. A health centre does not face that trade;
+it faces a ceiling set by the morning's staffing. We therefore added an
+evaluation matched to the real constraint: rank every attendee by each
+strategy, examine the top K%, and count what is found, for K from 5% to 50%.
+The framework follows Kelly and colleagues' treatment of triage testing when
+reference-test capacity is constrained.
+
+Five strategies were ranked on identical participants: the triage score; the
+Zhang 2016 published NHANES PAD model, refitted on our cohort; test everyone
+with diabetes; test everyone aged ≥60; and an unordered queue. Binary rules
+provide no ordering within their own group — below a capacity equal to the
+number of diabetic attendees, "test everyone with diabetes" cannot say which
+of them to see. Those ties are broken at random and averaged over 200 draws,
+rather than resolved by any other variable, which would credit the rule with
+information it does not have.
+
+### 2.10 Symptoms
+
+The premise that symptom-driven case finding fails is usually supported by
+citation. We tested it here. A leg-symptom item (LEQ020) is carried inside the
+LEXAB examination file rather than a questionnaire file, and only from
+2001–2002; 3739 participants have it. We report disease prevalence by symptom
+status, the operating characteristics of "examine whoever complains" as a
+triage rule, and score performance restricted to those reporting no symptoms.
+
+### 2.11 Comparison with a published model
+
+Zhang and colleagues developed a PAD prediction model in NHANES 1999–2002 with
+external validation in 2003–2004 (age, sex, race, pulse pressure, the total
+cholesterol/HDL ratio, ever-smoking; C=0·82 training, 0·76 validation). Because
+their data and ours overlap, we refitted their variable set on our cohort and
+put both models through identical tests rather than comparing published numbers
+across different samples and validation designs.
+
+### 2.12 Subgroups
 
 Performance was examined by diabetes status, sex, age band and obesity. The
 non-diabetic subgroup is the one that matters: it is where a score can add
 anything to current practice.
 
-### 2.10 Prevalence, weighting and software
+### 2.13 Prevalence, weighting and software
 
 Individual-level prediction was modelled unweighted, since the target is a
 prediction for a person rather than an estimate for a population. Prevalence
@@ -274,7 +317,7 @@ and PSU, with Taylor-linearised standard errors.
 Analyses used Python 3.11 with pandas, NumPy, scikit-learn and statsmodels.
 All code, the verification gate and the fetch pipeline are in the repository.
 
-### 2.11 Prognostic anchor
+### 2.14 Prognostic anchor
 
 Participants were linked to the public-use linked mortality file with
 follow-up to 31 December 2019. Cox models estimated all-cause and
@@ -336,7 +379,63 @@ The mechanism is straightforward: **1402 of 1813 cases (77·3%) occurred in
 participants without diagnosed diabetes.** No diabetes-based rule can reach
 them at any threshold.
 
-### 3.5 Secondary endpoints and sensitivity analyses
+### 3.5 Examination under a capacity ceiling
+
+This is the analysis matched to the constraint clinics actually face, and it
+separates the strategies far more sharply than the AUC does (Figure 1, Table 4).
+
+Among 6863 participants with both variable sets complete (1514 cases), at a 20%
+examination ceiling — 1373 examinations — the triage score found **636 cases**
+against **428** for the diabetes rule: **208 more cases, a 48% increase**, from
+the same number of examinations. Put the other way, the diabetes rule needed
+**40% capacity — double — to find what the score found at 20%.** Efficiency was
+46·3 against 31·2 cases per 100 examinations.
+
+The advantage held across the range. At 10% capacity the score found 354 cases
+against 248; at 30%, 849 against 564. The age ≥60 rule was worse than the
+diabetes rule below 20% capacity and better above it. An unordered queue found
+331 cases at 20% — meaning **the diabetes rule outperforms random ordering by
+97 cases, while the score outperforms it by 305.**
+
+The refitted Zhang 2016 model found 607 cases at 20% capacity, close behind the
+score and far ahead of both heuristics. This matters for what the paper claims:
+the separation that counts clinically is between *any* risk-based ordering and
+the rules in current use, not between one model and another.
+
+### 3.6 Head-to-head with a published model
+
+Refitted on our participants, the Zhang 2016 variable set achieved an AUC of
+0·790 for PAD alone against our 0·797, and 0·722 for the composite against our
+0·737. It beat the diabetes rule at 12 of 12 thresholds, as ours did, and
+required a 63·1% examination burden at 85% sensitivity against our 62·3%.
+
+We report this plainly: **on discrimination the two models are close enough
+that the difference is not the point.** What separates them is what each can be
+used for. Their model predicts PAD alone, and 1227 of our 1813 cases (67·7%)
+were neuropathy without PAD — structurally invisible to a PAD-only endpoint at
+any threshold. Their model requires a total cholesterol and HDL measurement;
+ours requires none. Three of their eight terms are US race/ethnicity categories
+(Black OR 2·37; "Other" OR 0·12, 95% CI 0·03–0·54, estimated on 119 people),
+which have no counterpart in the population this score is designed for. Their
+output is a logit with an intercept of −9·37; ours is an integer between 0 and
+18.
+
+### 3.7 Disease without symptoms
+
+Among 3362 participants with the leg-symptom item and complete predictors,
+**643 of 730 cases (88·1%) occurred in people reporting no leg pain.**
+Prevalence was 23·7% among those reporting pain and 21·5% among those not — a
+difference of 2·2 percentage points. The symptom item alone had an **AUC of
+0·506**: asking the patient is a coin flip.
+
+As a triage rule, "examine whoever complains" had a sensitivity of 0·119 and a
+PPV of 0·237, examining 10·9% of attendees to find 87 of 730 cases. Examining
+the same number of people by score instead found **201 cases (+131%)**.
+
+Score discrimination was undiminished among the symptomless (AUC 0·755 against
+0·740 overall) — the group a symptom-led approach cannot reach by construction.
+
+### 3.8 Secondary endpoints and sensitivity analyses
 
 The score performed *better* for PAD alone (AUC 0·791) than for the composite,
 and best for the high-risk foot with both conditions present (0·831).
@@ -346,7 +445,7 @@ sites 0·740, ≥1 site on both feet 0·735. The score is therefore not an
 artefact of one endpoint definition, and it is not merely a neuropathy
 detector.
 
-### 3.6 Subgroups
+### 3.9 Subgroups
 
 AUC was 0·734 in participants without diabetes and 0·690 in those with it —
 the expected direction, since within a diabetic population much of the
@@ -355,7 +454,7 @@ score's information is already spent. It was 0·732 in women and 0·734 in men;
 participants. Performance within age bands is lower than overall because age
 carries much of the discrimination.
 
-### 3.7 Prognostic anchor
+### 3.10 Prognostic anchor
 
 Among 8067 linked participants followed a median 16·2 years there were 3335
 deaths, 1085 cardiovascular. All-cause mortality rose from 4·1 to 80·6 per
@@ -374,47 +473,66 @@ causes.
 ## 4. Discussion
 
 A nine-item score, computable in under three minutes with no device and no
-laboratory, discriminates undiagnosed lower-extremity disease with an
-optimism-corrected AUC of 0·739 and — the finding we consider decisive —
-delivers greater net benefit than the two triage rules currently used in
-practice across the entire practical threshold range.
+laboratory, finds 48% more lower-extremity disease than the rule clinics
+currently use, from the same number of examinations. Under a 20% capacity
+ceiling that is 208 additional cases per 1373 examinations; the diabetes rule
+needs double the capacity to match it.
 
-The size of the gap is explained by a single number. More than three-quarters
-of prevalent lower-extremity disease in this cohort occurred in people
-*without* diagnosed diabetes. A rule keyed to diabetes cannot find them, at
-any threshold, however diligently applied. This is not a criticism of
-clinicians; it is a property of the epidemiology that a heuristic developed
-around diabetic foot programmes was never designed to accommodate.
+**The finding is about triage, not about our model.** A published NHANES PAD
+model refitted on the same participants found 607 cases at the same ceiling —
+close behind ours, far ahead of both heuristics — and beat the diabetes rule at
+every threshold, as ours did. We could have omitted that comparison. Reporting
+it changes the paper's claim for the better: the evidence supports abandoning
+diabetes status as the triage rule, and does not depend on adopting any
+particular replacement. A clinic that prefers an existing model should use it.
 
-Two negative results deserve emphasis because the literature systematically
-under-reports them. First, **adding laboratory tests was worth 0·001 of AUC.**
-Where a health centre must choose between a phlebotomy pathway and a tape
-measure, our data support the tape measure. Second, **gradient boosting was
-worse than penalised logistic regression** on identical inputs (0·725 versus
-0·739). With 1813 events and nine well-understood predictors, there is little
-non-linear structure for a flexible learner to find, and it pays a variance
-cost for looking. We report this because the alternative — quietly omitting
-the benchmark that disappointed — is how the impression arises that flexible
-methods always win.
+The size of the gap has a simple explanation. More than three-quarters of
+prevalent disease in this cohort occurred in people *without* diagnosed
+diabetes. A rule keyed to diabetes cannot find them at any threshold, however
+diligently applied. This is not a criticism of clinicians; it is a property of
+the epidemiology that a heuristic developed inside diabetic foot programmes was
+never built to accommodate. The diabetes rule is not useless — it beats random
+ordering by 97 cases at 20% capacity — but it recovers only a third of what
+ordering by risk recovers.
+
+**Asking the patient does not work.** The claim that symptom-driven case
+finding fails is usually supported by citation; we tested it here and the
+result is starker than the citation implies. The leg-symptom item had an AUC of
+0·506 — indistinguishable from chance — and 88·1% of cases occurred in people
+who reported no leg pain. Prevalence differed between symptomatic and
+asymptomatic attendees by 2·2 percentage points. Any workflow that waits for a
+complaint, or that uses a complaint to prioritise, is close to selecting at
+random. Crucially, the score's discrimination did not degrade among the
+symptomless (AUC 0·755), which is precisely the group such workflows cannot
+reach.
+
+**Two negative results deserve emphasis** because the literature
+under-reports them. Adding laboratory tests was worth 0·001 of AUC: where a
+health centre must choose between a phlebotomy pathway and a tape measure,
+these data support the tape measure. And gradient boosting was *worse* than
+penalised logistic regression on identical inputs (0·725 versus 0·739). With
+1813 events and nine well-understood predictors there is little non-linear
+structure to find, and a flexible learner pays variance for looking. We report
+this because quietly dropping the benchmark that disappointed is how the
+impression arises that flexible methods always win.
 
 **The target we missed matters.** We had hoped to reach 85% sensitivity while
 examining no more than 40% of attendees. That combination does not exist in
-these data: 85% sensitivity costs a 65·7% examination burden. A clinic
-willing to examine two-thirds of its attendees does not have much of a
-capacity problem to begin with. The honest reading is that the score reorders
-the queue well but does not shorten it as much as we wanted, and a service
-adopting it must choose its own point on that trade-off — perhaps 40% burden
-at 68% sensitivity — rather than inherit ours. We report the full threshold
-table (Table 3) precisely so that this choice is made locally and explicitly.
+these data: 85% sensitivity costs a 65·7% examination burden. A clinic willing
+to examine two-thirds of its attendees does not have much of a capacity problem
+to begin with. The honest reading is that the score reorders the queue well but
+does not shorten it as much as we wanted. Table 3 and Table 4 are reported in
+full so that a service picks its own point on that trade-off rather than
+inheriting ours.
 
 The USPSTF concluded in 2018 that evidence is insufficient to recommend ABI
 screening in asymptomatic adults, and we anticipate the objection directly.
-That determination concerns whether to screen a general population in a
-setting where the alternative is doing nothing. Our question is different:
-given a clinic that will examine *some* patients today, which ones? Allocating
-scarce capacity is not the same decision as creating a screening programme,
-and the neuropathy component in particular rests on a firmer guideline footing
-through established diabetic foot-care pathways.
+That determination concerns whether to screen a general population where the
+alternative is doing nothing. Our question is different: given a clinic that
+will examine *some* patients today, which ones? Allocating scarce capacity is
+not the same decision as creating a screening programme, and the neuropathy
+component rests on a firmer guideline footing through established diabetic
+foot-care pathways.
 
 **Limitations.** The data are from 1999–2004 and from the United States. The
 risk-factor profile is arguably closer to that of contemporary
@@ -431,6 +549,14 @@ finding rather than a technical failure; we addressed this with the abnormal-
 ABI sensitivity endpoint (AUC 0·766) but cannot fully repair it. Fifth, the
 public-use linked mortality file is perturbed to reduce re-identification
 risk, so very small subgroup mortality estimates should not be read closely.
+Sixth, the symptom analysis rests on a single item available only in
+2001–2004 and answered by 3739 participants; we took the variable at its
+codebook name and could not retrieve the exact question wording, so it
+should be read as a screening question for leg pain on walking rather
+than a full Edinburgh claudication instrument. Seventh, the capacity
+analysis assumes attendees present as a single batch to be ranked; a real
+clinic sees them sequentially, and a prospective implementation would need
+a fixed score cut-off rather than a daily ranking.
 
 **Implications.** The deliverable is a one-page table and an offline
 calculator, not a model that needs a server. Where examination capacity is
@@ -492,6 +618,33 @@ existing survey data.
     2021;385:1737–49.
 12. National Center for Health Statistics. NHANES 1999–2004 Lower Extremity
     Disease documentation, codebooks and frequencies (LEXAB, LEXPN).
+13. Zhang Y, Huang J, Wang P. A prediction model for the peripheral arterial
+    disease using NHANES data. *Medicine* 2016;95(16):e3454.
+14. Kelly SL, Ward H, Flaxman AD, et al. Evaluation of triage tests when
+    existing test capacity is constrained: application to rapid diagnostic
+    testing in COVID-19. *Med Decis Making* 2021;41(7):main.
+15. Quan Y, et al. Diagnosis models to predict peripheral arterial disease: a
+    systematic review and meta-analysis. *Sci Rep* 2025;15:26661.
+
+---
+
+## Figures
+
+**Figure 1.** Cumulative gain under a capacity ceiling: share of all
+lower-extremity disease found against share of attendees examined, for the
+triage score, the refitted Zhang 2016 model, the two heuristics in current use,
+and an unordered queue. `results/fig1_capacity.png`
+
+**Figure 2.** Receiver operating characteristic curves, Version A, Version B
+and the gradient-boosting benchmark. `results/fig2_roc.png`
+
+**Figure 3.** Decile calibration plot. `results/fig3_calibration.png`
+
+**Figure 4.** Decision curve against four comparator strategies.
+`results/fig4_dca.png`
+
+**Figure 5.** Kaplan–Meier survival by score band, all-cause and
+cardiovascular mortality. `results/fig5_survival.png`
 
 ---
 
@@ -561,4 +714,59 @@ Score = 2 + sum of points. Range 0–18.
 | 0.500 | 0.17 | 0.96 | 0.55 | 0.80 | 6.9% | 1.8 |
 
 *Bold row in practice:* threshold 0·125 is the lowest-burden point reaching sensitivity ≥0·85 (0·88), at a cost of examining 65·7% of attendees.
+
+
+## Table 4. Cases found under a capacity ceiling
+
+Among 6863 attendees with 1514 cases. Every strategy ranks the same
+people; ties inside a binary rule are broken at random and averaged.
+
+| Share examined | Triage score | Zhang 2016 | Diabetes rule | Age ≥60 rule | Unordered queue |
+|---|---|---|---|---|---|
+| **5%** | 189 (12%) | 181 (12%) | 125 (8%) | 108 (7%) | 73 (5%) |
+| **10%** | 354 (23%) | 343 (23%) | 248 (16%) | 216 (14%) | 147 (10%) |
+| **15%** | 502 (33%) | 482 (32%) | 359 (24%) | 323 (21%) | 241 (16%) |
+| **20%** | 636 (42%) | 607 (40%) | 428 (28%) | 433 (29%) | 331 (22%) |
+| **25%** | 749 (49%) | 722 (48%) | 496 (33%) | 541 (36%) | 404 (27%) |
+| **30%** | 849 (56%) | 803 (53%) | 564 (37%) | 648 (43%) | 492 (32%) |
+| **40%** | 1029 (68%) | 993 (66%) | 699 (46%) | 863 (57%) | 643 (42%) |
+| **50%** | 1163 (77%) | 1149 (76%) | 834 (55%) | 1079 (71%) | 784 (52%) |
+
+Cases found (share of all 1514 cases). At 20% capacity the score finds 208
+more cases than the diabetes rule from the same 1373 examinations; the
+diabetes rule requires 40% capacity to match the score's 20% yield.
+
+## Table 5. Head-to-head with Zhang 2016, refitted on these participants
+
+| | Zhang 2016 | Triage score |
+|---|---|---|
+| AUC, PAD alone | 0.790 | 0.797 |
+| AUC, composite endpoint | 0.722 | 0.737 |
+| Cases found at 20% capacity | 607 | 636 |
+| Beats the diabetes rule | 12/12 thresholds | 12/12 thresholds |
+| Burden at 85% sensitivity | 63.1% | 62.3% |
+| Requires a laboratory | Yes (total cholesterol, HDL) | No |
+| Contains US race/ethnicity terms | Yes (3 of 8 terms) | No |
+| Captures neuropathy | No | Yes |
+| Deployable form | logit, intercept −9.37 | integer score 0–18 |
+| Mortality anchor | No | Yes (16.2 years) |
+
+Discrimination is close. What separates the models is what each can be
+used for, and 67.7% of cases here are neuropathy without PAD — invisible
+to a PAD-only endpoint at any threshold.
+
+## Table 6. Leg symptoms as a triage rule
+
+| | Value |
+|---|---|
+| Participants with the symptom item | 3362 |
+| Cases | 730 |
+| Prevalence, reports leg pain | 23.7% (87/367) |
+| Prevalence, reports no leg pain | 21.5% (643/2995) |
+| Cases in people reporting no pain | 643 (88.1%) |
+| AUC of the symptom item alone | **0.506** |
+| Sensitivity of 'examine whoever complains' | 0.119 |
+| Cases found examining 10.9% by symptoms | 87 |
+| Cases found examining 10.9% by score | 201 (+131%) |
+| Score AUC among the symptomless | 0.755 |
 
