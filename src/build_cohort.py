@@ -227,9 +227,14 @@ def build_cycle(cycle):
 
     tc = read_xpt(cycle, "TCHOL")
     if tc is not None:
-        d = d.merge(frame(tc, tchol=col(tc, "LBXTC")), on="SEQN", how="left")
+        # HDL is LBDHDL in 1999-2002 and LBXHDD in 2003-2004 - one more
+        # mid-study rename, in the same file as total cholesterol.
+        d = d.merge(frame(tc, tchol=col(tc, "LBXTC"),
+                          hdl=col(tc, "LBDHDL", "LBXHDD")),
+                    on="SEQN", how="left")
     else:
         d["tchol"] = np.nan
+        d["hdl"] = np.nan
 
     ghb = read_xpt(cycle, "GHB")
     if ghb is not None:

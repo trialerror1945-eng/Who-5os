@@ -1,0 +1,46 @@
+========================================================================
+HEAD-TO-HEAD: Zhang 2016 variable set vs the triage score
+========================================================================
+
+--- DEPLOYABILITY: for how many patients can each score be computed? ---
+  Zhang 2016 (needs a lipid panel) :  7417 / 8080 (91.8%)
+  Triage score (no laboratory)     :  7263 / 8080 (89.9%)
+  Patients Zhang cannot score      :   663 (8.2%)
+  A lipid panel is not a formality in a health centre without one.
+
+Like-for-like comparison on 6863 participants with both variable sets complete.
+
+--- PAD alone (their endpoint):  n=6396, events=475 (7.4%) ---
+  Zhang 2016     AUC 0.790
+  Triage score   AUC 0.797
+  Difference                +0.007
+
+--- Composite LED (our endpoint):  n=6863, events=1514 (22.1%) ---
+  Zhang 2016     AUC 0.722
+  Triage score   AUC 0.737
+  Difference                +0.015
+
+========================================================================
+THE TEST NEITHER PAPER'S PREDECESSORS RAN: net benefit vs the
+'test everyone with diabetes' heuristic, on the composite endpoint
+========================================================================
+  thresh     Zhang    Triage  diabetes   age>=60
+    0.05    0.1802    0.1803    0.0451    0.1498
+    0.10    0.1398    0.1441    0.0400    0.1282
+    0.15    0.1096    0.1126    0.0343    0.1041
+    0.20    0.0844    0.0865    0.0279    0.0770
+    0.25    0.0600    0.0663    0.0206    0.0462
+    0.30    0.0416    0.0491    0.0123    0.0111
+    0.35    0.0281    0.0345    0.0028   -0.0294
+    0.40    0.0165    0.0231   -0.0084   -0.0767
+    0.45    0.0107    0.0130   -0.0216   -0.1326
+    0.50    0.0004    0.0035   -0.0374   -0.1996
+    0.55   -0.0010    0.0011   -0.0568   -0.2816
+    0.60   -0.0008   -0.0017   -0.0810   -0.3840
+
+  Zhang 2016 beats the diabetes rule at  12/12 thresholds
+  Triage score beats it at               12/12 thresholds
+
+--- EXAMINATION BURDEN AT SENSITIVITY >=0.85 (composite endpoint) ---
+  Zhang 2016     examine  63.1% (sens 0.85, NNT 3.4)
+  Triage score   examine  62.3% (sens 0.85, NNT 3.3)
