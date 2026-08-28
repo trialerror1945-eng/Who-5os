@@ -1,0 +1,54 @@
+name: Fetch NHANES raw data
+
+# Manual only. The runner has the open internet access that the analysis
+# sandbox does not, so this is where the CDC files are pulled from.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: claude/ml-healthcare-research-ewq189
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install parser
+        run: pip install --quiet pandas
+
+      - name: Download NHANES 1999-2004 files
+        run: python3 tools/fetch_nhanes.py
+
+      - name: Verify against published codebook frequencies
+        run: python3 tools/verify_raw.py
+
+      - name: Report what landed
+        run: |
+          echo "### Downloaded files" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          find data/raw -type f | sort >> $GITHUB_STEP_SUMMARY
+          du -sh data/raw >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+      - name: Commit raw data
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f data/raw
+          if git diff --staged --quiet; then
+            echo "no changes to commit"
+          else
+            git commit -m "data: fetch and verify NHANES 1999-2004 LED files
+
+          Downloaded by tools/fetch_nhanes.py on a GitHub runner and gated by
+          tools/verify_raw.py, which reproduces the published LEXAB_C/LEXPN_C
+          frequencies exactly. SHA-256 of every file is in MANIFEST.json."
+            git push origin HEAD:claude/ml-healthcare-research-ewq189
+          fi
