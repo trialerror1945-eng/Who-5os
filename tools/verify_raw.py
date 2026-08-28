@@ -51,6 +51,13 @@ def main():
     pn = pd.read_sas(pn_path, format="xport")
     check("row count", len(pn), EXPECTED_LEXPN_N)
 
+    for var in EXPECTED_PN:
+        if var in pn.columns:
+            print(f"  [diag] {var} dtype={pn[var].dtype} "
+                  f"distinct={pn[var].nunique(dropna=False)}")
+            print("         " + pn[var].value_counts(dropna=False)
+                  .head(8).to_string().replace("\n", "\n         "))
+
     for var, counts in EXPECTED_PN.items():
         if var not in pn.columns:
             print(f"  FAIL  {var} absent from file")
