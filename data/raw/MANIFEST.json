@@ -1,30 +1,18 @@
 {
-  "files": [
-    {
-      "cycle": "1999-2000",
-      "logical": "CDQ",
-      "source_name": "CDQ",
-      "url": "https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/1999/DataFiles/CDQ.xpt",
-      "bytes": 256960,
-      "sha256": "d4abcd83a5866d07e4f745ba7c80a3d17d0d7da04c327e08ff0d216c9415f290"
-    },
-    {
-      "cycle": "2001-2002",
-      "logical": "CDQ",
-      "source_name": "CDQ_B",
-      "url": "https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2001/DataFiles/CDQ_B.xpt",
-      "bytes": 477280,
-      "sha256": "e58a5c8b2c06cb7a048a1b27e21882ccd1690628badfc462b3c7499d35225d92"
-    },
-    {
-      "cycle": "2003-2004",
-      "logical": "CDQ",
-      "source_name": "CDQ_C",
-      "url": "https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2003/DataFiles/CDQ_C.xpt",
-      "bytes": 451840,
-      "sha256": "1b4bf5bea302a5bb09fbec0c232c35b895f8deb9fdf07fe626cc3fba1c542561"
-    }
-  ],
+  "files": [],
   "missing_core": [],
-  "missing_optional": []
+  "missing_optional": [
+    [
+      "1999-2000",
+      "LEQ"
+    ],
+    [
+      "2001-2002",
+      "LEQ"
+    ],
+    [
+      "2003-2004",
+      "LEQ"
+    ]
+  ]
 }
