@@ -688,6 +688,10 @@ def report(res_a, res_b, d, y, p_gb, dm_rule, age_rule, ref_units, args,
         chosen_threshold=chosen, decisive_kpi_met=bool(decisive),
         wins_vs_diabetes_rule=int(wins_dm), n_thresholds=int(len(thrs)),
         coefs_a=res_a["coefs"], coefs_b=res_b["coefs"],
+        points_offset_a=points_results[res_a["label"]]["offset"],
+        points_auc_a=points_results[res_a["label"]]["auc"],
+        points_offset_b=points_results[res_b["label"]]["offset"],
+        points_auc_b=points_results[res_b["label"]]["auc"],
         knots_a={k: list(v) for k, v in res_a["knots"].items()},
     )
     with open(os.path.join(OUT, "summary.json"), "w") as f:

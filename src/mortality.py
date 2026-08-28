@@ -140,14 +140,18 @@ def main():
     fig, axes = plt.subplots(1, 2, figsize=(6.6, 3.0))
     for ax, (ev, title) in zip(axes, (("dead", "All-cause mortality"),
                                       ("cv_death", "Cardiovascular mortality"))):
+        lowest = 1.0
         for b in sorted(d["band"].unique()):
             g = d[d["band"] == b]
             t, s = km(g["years"].to_numpy(), g[ev].to_numpy())
+            lowest = min(lowest, float(s.min()))
             ax.step(t, s, where="post", lw=1.4, label=f"score {labels[b]}")
         ax.set_xlabel("Years from examination")
         ax.set_ylabel("Survival")
         ax.set_title(title, fontsize=8)
-        ax.set_ylim(0.4, 1.0)
+        # Floor taken from the curves themselves; a fixed limit clipped the
+        # highest-risk band, which is the one the figure exists to show.
+        ax.set_ylim(max(0.0, lowest - 0.05), 1.0)
     axes[0].legend(frameon=False, fontsize=6, loc="lower left")
     fig.tight_layout()
     fig.savefig(os.path.join(OUT, "fig5_survival.png"))

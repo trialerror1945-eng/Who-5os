@@ -1,0 +1,24 @@
+======================================================================
+PROGNOSTIC ANCHOR - mortality through 31 December 2019
+======================================================================
+Linked participants        : 8067
+Median follow-up (years)   : 16.2
+Deaths, all causes         : 3335
+Deaths, cardiovascular     : 1085
+
+--- MORTALITY BY SCORE BAND ---
+      band      n  deaths  CV deaths  all-cause/1000py   CV/1000py
+       0-5   1701     121         34               4.1         1.1
+       6-7   1596     316         74              12.0         2.8
+      8-10   2517    1059        303              28.4         8.1
+      >=11   2253    1839        674              80.6        29.5
+
+--- COX, ALL-CAUSE MORTALITY ---
+  per 1 point   HR 1.400 (95% CI 1.383-1.416)   n=8067, events=3335, p=0.00e+00
+  adj age+sex   HR 1.182 (95% CI 1.159-1.206)   p=1.55e-62
+  LED present   HR 2.712 (95% CI 2.526-2.912)   events=3335
+
+--- COX, CARDIOVASCULAR MORTALITY ---
+  per 1 point   HR 1.477 (95% CI 1.445-1.509)   n=8067, events=1085, p=1.57e-274
+  adj age+sex   HR 1.238 (95% CI 1.197-1.280)   p=4.95e-35
+  LED present   HR 3.532 (95% CI 3.129-3.986)   events=1085
