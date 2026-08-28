@@ -1,0 +1,47 @@
+==========================================================================
+EXAMINATION UNDER A CAPACITY CEILING
+==========================================================================
+Attendees 6863, cases 1514 (22.1%)
+Every strategy ranks the same people; only the ranking differs.
+
+--- CASES FOUND, by share of attendees examined ---
+strategy               5%      10%      15%      20%      25%      30%      40%      50%
+Triage score          189      354      502      636      749      849     1029     1163
+Zhang 2016            181      343      482      607      722      803      993     1149
+Diabetes rule         125      248      359      428      496      564      699      834
+Age >=60 rule         108      216      323      433      541      648      863     1079
+Random order           73      147      241      331      404      492      643      784
+
+--- SHARE OF ALL CASES CAPTURED (sensitivity at that capacity) ---
+strategy               5%      10%      15%      20%      25%      30%      40%      50%
+Triage score        12.5%    23.4%    33.2%    42.0%    49.5%    56.1%    68.0%    76.8%
+Zhang 2016          12.0%    22.7%    31.8%    40.1%    47.7%    53.0%    65.6%    75.9%
+Diabetes rule        8.2%    16.4%    23.7%    28.3%    32.8%    37.3%    46.2%    55.1%
+Age >=60 rule        7.2%    14.2%    21.3%    28.6%    35.7%    42.8%    57.0%    71.3%
+Random order         4.8%     9.7%    15.9%    21.9%    26.7%    32.5%    42.5%    51.8%
+
+--- EXTRA CASES FOUND vs THE DIABETES RULE, same capacity ---
+strategy               5%      10%      15%      20%      25%      30%      40%      50%
+Triage score          +64     +106     +143     +208     +253     +285     +330     +329
+Zhang 2016            +56      +95     +123     +179     +226     +239     +294     +315
+Age >=60 rule         -16      -33      -36       +5      +45      +84     +164     +245
+Random order          -52     -101     -118      -97      -92      -72      -56      -50
+
+--- CASES FOUND PER 100 EXAMINATIONS (the clinic's efficiency) ---
+strategy               5%      10%      15%      20%      25%      30%      40%      50%
+Triage score         55.1     51.6     48.8     46.3     43.6     41.2     37.5     33.9
+Zhang 2016           52.8     50.0     46.8     44.2     42.1     39.0     36.2     33.5
+Diabetes rule        36.4     36.2     34.9     31.2     28.9     27.4     25.5     24.3
+Age >=60 rule        31.6     31.4     31.4     31.5     31.5     31.5     31.5     31.4
+Random order         21.3     21.4     23.4     24.1     23.5     23.9     23.4     22.8
+
+==========================================================================
+AT 20% CAPACITY (1373 examinations per 6863 attendees)
+==========================================================================
+  Triage score finds  636 cases
+  Diabetes rule finds 428 cases
+  Difference          +208 cases (+48%)
+  Put the other way: the diabetes rule would need 40% capacity to find what the score finds at 20%.
+
+--- DISCRIMINATION, for reference ---
+  Triage score AUC 0.737   Zhang 2016 AUC 0.722

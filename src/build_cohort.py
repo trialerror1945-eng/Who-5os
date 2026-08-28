@@ -179,7 +179,10 @@ def build_cycle(cycle):
     else:
         log("  LEXAB     incompressible-artery flags absent this cycle")
         ncomp = np.nan
+    # LEQ020 (leg pain or discomfort on walking) rides inside the LEXAB file
+    # rather than a questionnaire file, and only from 2001-2002 on.
     d = d.merge(frame(ab,
+                      leg_pain=yes_no(col(ab, "LEQ020")),
                       abi_left=left, abi_right=right,
                       abi_min=both.min(axis=1), abi_max=both.max(axis=1),
                       noncompressible=pd.Series(ncomp, index=ab.index),

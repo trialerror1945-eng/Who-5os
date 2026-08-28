@@ -1,0 +1,33 @@
+========================================================================
+DISEASE WITHOUT SYMPTOMS
+========================================================================
+Leg symptoms were recorded only in 2001-2004, so this analysis uses
+the 3362 participants with both the symptom item and complete
+predictors. It is a subgroup analysis, not the primary cohort.
+
+--- PREVALENCE BY SYMPTOM STATUS ---
+group                             n   cases   prevalence
+Reports leg pain                367      87        23.7%
+Reports no leg pain            2995     643        21.5%
+
+  Cases occurring in people who report no leg pain: 643 of 730 (88.1%)
+  Prevalence differs between the two groups by +2.2 percentage points.
+  Asking about symptoms barely separates the groups at all.
+
+--- 'EXAMINE WHOEVER COMPLAINS' AS A TRIAGE RULE ---
+  sensitivity 0.119   specificity 0.894
+  PPV 0.237   NPV 0.785
+  examines 10.9% of attendees, finds 87 of 730 cases
+  AUC of the symptom item alone: 0.506
+  A rule that finds one case in eight is not a triage strategy.
+
+--- THE SCORE, WHERE IT MATTERS ---
+  AUC, all participants in this subgroup : 0.740
+  AUC, restricted to those reporting no pain: 0.755  (n=2995, cases=643)
+  Discrimination is undiminished in the silent majority, which is
+  the group a symptom-led approach cannot reach by construction.
+
+--- AT THE SAME EXAMINATION BURDEN AS THE SYMPTOM RULE ---
+  Examining 367 people (10.9%):
+    by symptoms        87 cases
+    by triage score   201 cases  (+114, +131%)
