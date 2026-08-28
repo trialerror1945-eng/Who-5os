@@ -157,9 +157,9 @@ BODY = """
   <div class="head-inner">
     <p class="eyebrow">Derivation &amp; internal validation &middot; NHANES 1999&ndash;2004</p>
     <h1>Which feet deserve the Doppler?</h1>
-    <p class="lede">A nine-item score, needing no device and no laboratory,
-    that decides whose feet get examined first &mdash; and beats the rule
-    clinicians use today at every threshold tested.</p>
+    <p class="lede">Where a clinic can only examine some feet today, the order
+    of the queue is a clinical decision currently made by a rule that finds
+    barely more disease than picking at random.</p>
     <div class="sub-id">
       <span>Cohort <b>8,080</b></span>
       <span>Events <b>1,813</b></span>
@@ -170,49 +170,115 @@ BODY = """
   </div>
 
   <div class="stats">
-    <div class="stat"><div class="v">0.739</div>
-      <div class="k">AUC, optimism-corrected<br>95% CI 0.727&ndash;0.752</div></div>
-    <div class="stat"><div class="v">0.986</div>
-      <div class="k">Calibration slope<br>CITL 0.000</div></div>
-    <div class="stat"><div class="v">23/23</div>
-      <div class="k">Thresholds beating the<br>diabetes heuristic</div></div>
-    <div class="stat"><div class="v">77.3%</div>
-      <div class="k">Of cases that heuristic<br>cannot reach at all</div></div>
+    <div class="stat"><div class="v">+48%</div>
+      <div class="k">More cases found than the<br>diabetes rule, same capacity</div></div>
+    <div class="stat"><div class="v">2&times;</div>
+      <div class="k">Capacity that rule needs<br>to catch up</div></div>
+    <div class="stat"><div class="v">0.506</div>
+      <div class="k">AUC of asking the patient<br>about leg pain</div></div>
+    <div class="stat"><div class="v">88%</div>
+      <div class="k">Of cases report<br>no symptoms at all</div></div>
   </div>
 </header>
 
 <section>
   <div class="section-head">
-    <p class="eyebrow">The decisive test</p>
-    <h2>Beating the rule clinicians already apply</h2>
+    <p class="eyebrow">The question a clinic actually asks</p>
+    <h2>We can examine twenty feet today. Whose?</h2>
   </div>
   <div class="prose">
-    <p>Most prediction papers test a model against &ldquo;treat everyone&rdquo;
-    and &ldquo;treat no one.&rdquo; Those are strawmen. The rule a clinic
-    actually uses is <em>test the patients with diabetes</em>, and a triage
-    score that cannot beat it is not worth printing. We committed in advance
-    to reporting this comparison in either direction.</p>
+    <p>A decision curve prices a false positive against a true positive at an
+    abstract exchange rate. A health centre faces something harder: a ceiling
+    set by the morning&rsquo;s staffing. So we ranked every attendee by each
+    strategy, examined the top slice, and counted what was found.</p>
   </div>
 
   <div class="decisive">
-    <p class="verdict">The score wins at 23 of 23 thresholds &mdash; against
-    both heuristics.</p>
-    <p>At a threshold probability of 0.20, net benefit is <b>0.0914</b> for
-    the score against <b>0.0283</b> for &ldquo;test everyone with
-    diabetes&rdquo; and <b>0.0817</b> for &ldquo;test everyone aged
-    &ge;60&rdquo;. The mechanism is one number: <b>1,402 of 1,813 cases
-    (77.3%) occurred in people without diagnosed diabetes.</b> No
-    diabetes-keyed rule can reach them, at any threshold, however diligently
-    applied.</p>
+    <p class="verdict">At a 20% ceiling the score finds 636 cases. The
+    diabetes rule finds 428.</p>
+    <p>That is <b>208 more cases from the same 1,373 examinations</b> &mdash; a
+    48% increase. Put the other way, the diabetes rule needs <b>40% capacity,
+    double,</b> to find what the score finds at 20%. Efficiency: 46.3 against
+    31.2 cases per 100 examinations.</p>
   </div>
 
   <figure>
-    <img alt="Decision curve analysis. The triage score's net benefit sits above the curves for testing everyone with diabetes, testing everyone aged 60 or over, testing everyone, and testing no one, across threshold probabilities from 0.05 to 0.60." src="data:image/png;base64,__DCA__">
-    <figcaption><b>Decision curve analysis.</b> The score (heavy line)
-    dominates both rules in current use across the entire practical
-    threshold range. &ldquo;Test everyone&rdquo; turns negative beyond a
-    threshold of 0.22; the age rule beyond 0.32.</figcaption>
+    <img alt="Cumulative gain curves showing the share of all lower-extremity disease found against the share of attendees examined, for the triage score, the Zhang 2016 model, the diabetes rule, the age 60+ rule and an unordered queue." src="data:image/png;base64,__CAP__">
+    <figcaption><b>Figure 1. What each strategy finds under a ceiling.</b>
+    Every strategy ranks the same people. Ties inside a binary rule are broken
+    at random and averaged &mdash; crediting &ldquo;test everyone with
+    diabetes&rdquo; with an ordering it does not have would flatter it.</figcaption>
   </figure>
+</section>
+
+<section>
+  <div class="section-head">
+    <p class="eyebrow">The result that changed our claim</p>
+    <h2>A published model beats the heuristic too</h2>
+  </div>
+  <div class="prose">
+    <p>We refitted the closest published competitor &mdash; Zhang 2016, same
+    survey, overlapping cycles &mdash; on our own participants rather than
+    comparing numbers across different samples. It found <b>607 cases</b> at
+    the same 20% ceiling, close behind ours, and beat the diabetes rule at
+    every threshold, exactly as ours did.</p>
+    <p>We could have left that out. Reporting it makes the paper's claim
+    better, not worse: <b>the evidence supports abandoning diabetes status as
+    the triage rule, and does not depend on adopting our replacement.</b> A
+    clinic that prefers an existing model should use it.</p>
+  </div>
+  <div class="scroll">
+    <table>
+      <thead><tr><th></th><th>Zhang 2016</th><th>Triage score</th></tr></thead>
+      <tbody>
+        <tr><td class="lbl">AUC, PAD alone</td><td class="n">0.790</td><td class="n">0.797</td></tr>
+        <tr><td class="lbl">AUC, composite endpoint</td><td class="n">0.722</td><td class="n">0.737</td></tr>
+        <tr><td class="lbl">Cases at 20% capacity</td><td class="n">607</td><td class="n">636</td></tr>
+        <tr><td class="lbl">Beats the diabetes rule</td><td class="n">12/12</td><td class="n">12/12</td></tr>
+        <tr><td class="lbl">Needs a laboratory</td><td>Yes &mdash; cholesterol, HDL</td><td>No</td></tr>
+        <tr><td class="lbl">Contains US race terms</td><td>Yes &mdash; 3 of 8 terms</td><td>No</td></tr>
+        <tr><td class="lbl">Captures neuropathy</td><td>No</td><td>Yes</td></tr>
+        <tr><td class="lbl">Deployable form</td><td>logit, intercept &minus;9.37</td><td>integer 0&ndash;18</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <strong>Discrimination is close enough that it is not the point.</strong>
+    What separates the models is what each can be used for. <b>67.7% of cases
+    here are neuropathy without PAD</b> &mdash; structurally invisible to a
+    PAD-only endpoint at any threshold, however good its AUC.
+  </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <p class="eyebrow">Testing our own premise</p>
+    <h2>Asking the patient is a coin flip</h2>
+  </div>
+  <div class="prose">
+    <p>Every paper in this literature opens by asserting that symptom-driven
+    case finding fails, and supports it with a citation. We tested it in the
+    same participants.</p>
+  </div>
+  <div class="two">
+    <div class="card">
+      <h3>The symptom item alone</h3>
+      <p style="margin-top:9px">AUC <b>0.506</b>. Prevalence is 23.7% among
+      those reporting leg pain and 21.5% among those not &mdash; a gap of 2.2
+      percentage points. <b>88.1% of all cases report no leg pain.</b></p>
+    </div>
+    <div class="card">
+      <h3>At the same examination burden</h3>
+      <p style="margin-top:9px">Examining 10.9% of attendees by symptoms finds
+      <b>87</b> cases. Examining the same number by score finds <b>201</b>
+      &mdash; a 131% increase. Score discrimination among the symptomless is
+      <b>0.755</b>, higher than overall.</p>
+    </div>
+  </div>
+  <div class="prose" style="margin-top:20px">
+    <p>Any workflow that waits for a complaint, or uses one to prioritise, is
+    close to selecting at random.</p>
+  </div>
 </section>
 
 <section>
@@ -483,7 +549,8 @@ BODY = """
 """
 
 html = HEAD + BODY
-for key, tok in [("dca","__DCA__"),("surv","__SURV__"),("roc","__ROC__"),("cal","__CAL__")]:
+for key, tok in [("dca","__DCA__"),("surv","__SURV__"),("roc","__ROC__"),
+                 ("cal","__CAL__"),("cap","__CAP__")]:
     html = html.replace(tok, figs[key])
 
 open("/tmp/claude-0/-home-user-Who-5os/731e32d0-c6af-5670-ae4f-02f43eba3ec4/scratchpad/doppler-findings.html","w",encoding="utf-8").write(html)
