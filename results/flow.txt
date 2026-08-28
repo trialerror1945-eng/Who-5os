@@ -1,0 +1,61 @@
+
+--- 1999-2000 ---
+  DEMO       9965 rows
+  BPX       4 systolic readings averaged
+  LEXAB     incompressible-artery flags absent this cycle
+  LEXAB      2875 rows, 2381 with ABPI
+  LEXPN      2875 rows, 2527 with monofilament
+  MORT      5445 linked
+
+--- 2001-2002 ---
+  DEMO      11039 rows
+  BPX       4 systolic readings averaged
+  LEXAB      3184 rows, 2702 with ABPI
+  LEXPN      3184 rows, 2788 with monofilament
+  MORT      5987 linked
+
+--- 2003-2004 ---
+  DEMO      10122 rows
+  BPX       4 systolic readings averaged
+  LEXAB      3086 rows, 2488 with ABPI
+  LEXPN      3086 rows, 2699 with monofilament
+  MORT      5610 linked
+
+=== PARTICIPANT FLOW ===
+All participants, three cycles          : 31126
+Aged >=40 years                        : 9970
+Had at least one valid LED test         : 8193  (-1777)
+Excluding prevalent amputation          : 8170  (-23)
+Excluding active foot lesion            : 8080  (-90)
+
+=== ENDPOINT PREVALENCE (unweighted) ===
+  pad                586 /  7477 =   7.8%
+  pn                1381 /  7906 =  17.5%
+  led               1813 /  8080 =  22.4%
+  abi_abnormal       785 /  7539 =  10.4%
+  high_risk_foot     154 /  7303 =   2.1%
+
+=== MISSINGNESS IN CANDIDATE PREDICTORS ===
+  age          missing     0 (  0.0%)
+  sex          missing     0 (  0.0%)
+  sbp          missing   218 (  2.7%)
+  dbp          missing   300 (  3.7%)
+  bmi          missing   128 (  1.6%)
+  waist        missing   123 (  1.5%)
+  smoke        missing    12 (  0.1%)
+  dm           missing     3 (  0.0%)
+  dm_dur_cat   missing     3 (  0.0%)
+  htn_hx       missing    43 (  0.5%)
+  htn_med      missing   506 (  6.3%)
+  prior_cvd    missing     1 (  0.0%)
+  glucose      missing  4230 ( 52.4%)
+  egfr         missing   389 (  4.8%)
+  hba1c        missing   240 (  3.0%)
+  tchol        missing   382 (  4.7%)
+
+=== BY CYCLE ===
+           size    sum      mean
+cycle                           
+1999-2000  2567  604.0  0.235294
+2001-2002  2806  530.0  0.188881
+2003-2004  2707  679.0  0.250831

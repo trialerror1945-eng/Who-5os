@@ -101,7 +101,13 @@ def build_cycle(cycle):
         dm_bin = pd.Series(np.nan, index=diq.index, dtype=float)
         dm_bin[dm == 1] = 1.0
         dm_bin[dm.isin([2, 3])] = 0.0        # 3 = borderline, treated as no
-        age_dx = clean(col(diq, "DID040", "DID040G", "DIQ040G", "DID040Q"), 3)
+        # DIQ040Q (1999-2000) and DID040Q (2001-2004) hold age at diagnosis in
+        # years. The similarly named DID040G / DIQ040G do NOT: they are a
+        # 1/2/7/9 flag saying whether an age was given. Reading the flag as an
+        # age puts every diabetic participant's diagnosis at age 1 and turns
+        # diabetes duration into a near-constant 50 years, with nothing to
+        # signal that anything went wrong.
+        age_dx = col(diq, "DIQ040Q", "DID040Q")
         age_dx = age_dx.where(age_dx < 120)
         d = d.merge(frame(diq, dm=dm_bin, dm_age_dx=age_dx),
                     on="SEQN", how="left")
@@ -163,9 +169,16 @@ def build_cycle(cycle):
     right = col(ab, "LEXRABPI")
     both = pd.concat([left, right], axis=1)
     # Incompressible: ankle systolic above 255 mmHg, which leaves ABPI blank.
-    ncomp = np.where(
-        (clean(col(ab, "LEALAPNC")) == 1) | (clean(col(ab, "LEARAPNC")) == 1),
-        1.0, 0.0)
+    # These flags exist only from 2001-2002 on. Where the file does not carry
+    # them the status is unknown, not negative - recording a 0 would assert
+    # that nobody in 1999-2000 had an incompressible artery.
+    if "LEALAPNC" in ab.columns or "LEARAPNC" in ab.columns:
+        ncomp = np.where(
+            (clean(col(ab, "LEALAPNC")) == 1) | (clean(col(ab, "LEARAPNC")) == 1),
+            1.0, 0.0)
+    else:
+        log("  LEXAB     incompressible-artery flags absent this cycle")
+        ncomp = np.nan
     d = d.merge(frame(ab,
                       abi_left=left, abi_right=right,
                       abi_min=both.min(axis=1), abi_max=both.max(axis=1),
@@ -205,7 +218,9 @@ def build_cycle(cycle):
 
     bio = read_xpt(cycle, "BIO")
     if bio is not None:
-        scr = calibrate_creatinine(col(bio, "LBXSCR"), cycle)
+        # Serum creatinine is LBXSCR in 1999-2000 and 2003-2004 but LBDSCR in
+        # 2001-2002.
+        scr = calibrate_creatinine(col(bio, "LBXSCR", "LBDSCR"), cycle)
         d = d.merge(frame(bio, creatinine=scr), on="SEQN", how="left")
     else:
         d["creatinine"] = np.nan
@@ -230,11 +245,14 @@ def read_mortality(cycle):
     path = os.path.join(RAW, cycle, "MORT.dat")
     if not os.path.exists(path):
         return None
-    # Layout per the NCHS public-use linked mortality file documentation.
-    spec = [(0, 14), (14, 15), (15, 16), (16, 19), (19, 20),
-            (20, 21), (21, 22), (22, 26), (26, 34), (34, 42)]
+    # Column offsets verified against the delivered file rather than taken
+    # from the layout document: the follow-up fields sit at 42-48, not where
+    # a first reading of the spec put them, and reading blanks there yields a
+    # silently all-missing follow-up time.
+    spec = [(0, 14), (14, 15), (15, 16), (16, 19), (19, 20), (20, 21),
+            (42, 45), (45, 48)]
     names = ["SEQN", "eligstat", "mortstat", "ucod_leading", "diabetes_mcod",
-             "hyperten_mcod", "_f", "_g", "permth_int", "permth_exm"]
+             "hyperten_mcod", "permth_int", "permth_exm"]
     m = pd.read_fwf(path, colspecs=spec, names=names, header=None)
     m["SEQN"] = pd.to_numeric(m["SEQN"], errors="coerce").astype("Int64")
     m = m[m["eligstat"] == 1]                      # eligible for linkage

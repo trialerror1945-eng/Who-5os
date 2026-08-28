@@ -1,0 +1,224 @@
+======================================================================
+LOWER-EXTREMITY DISEASE TRIAGE SCORE - derivation and internal validation
+======================================================================
+Cohort            n = 8080
+Composite events      1813 (22.4%)
+  PAD only            586
+  Neuropathy only     1381
+  Both                154
+Imputations       m = 2;  bootstrap = 20
+
+--- SURVEY-WEIGHTED PREVALENCE (six-year MEC weights, Taylor linearisation) ---
+  led              16.97%  (95% CI 15.89-18.05)
+  pad               5.23%  (95% CI 4.67-5.79)
+  pn               13.32%  (95% CI 12.32-14.32)
+  high_risk_foot    1.20%  (95% CI 0.94-1.46)
+
+Imputing 12 variables (outcome included as a predictor, never imputed)...
+  2 completed datasets
+
+======================================================================
+MODEL A (no laboratory)   predictors: 9  (age, sbp, waist, sex_f, smoke_former, smoke_current, dm_dur_cat, htn_med, prior_cvd)
+======================================================================
+
+LASSO (C=0.2336) retains: age, dm_dur_cat, htn_med, prior_cvd, sbp, sex_f, smoke_current, smoke_former, waist
+LASSO shrinks to zero      : (none)
+
+AUC apparent                     : 0.742
+AUC 10-fold cross-validated      : 0.739
+AUC optimism-corrected           : 0.737 (95% CI 0.724-0.750)
+Optimism                         : 0.0048
+Calibration slope (bootstrap)    : 0.969
+Calibration-in-the-large         : +0.000
+Brier score                      : 0.1510
+Uniform shrinkage factor         : 0.969
+
+  KPI: AUC >=0.72 -> MET; CI lower bound >0.68 -> MET; slope 0.85-1.15 -> MET
+
+--- POOLED COEFFICIENTS (Rubin's rules across 2 imputations) ---
+term                 beta      SE      OR              95% CI
+age                0.0555  0.0155    1.06           1.03-1.09
+age'1             -0.0282  0.0528    0.97           0.88-1.08
+age'2              0.0968  0.1236    1.10           0.86-1.40
+sbp                0.0020  0.0069    1.00           0.99-1.02
+sbp'1             -0.0064  0.0285    0.99           0.94-1.05
+sbp'2              0.0286  0.0808    1.03           0.88-1.21
+waist              0.0147  0.0022    1.01           1.01-1.02
+sex_f             -0.3872  0.0615    0.68           0.60-0.77
+smoke_former       0.0419  0.0663    1.04           0.92-1.19
+smoke_current      0.4342  0.0838    1.54           1.31-1.82
+dm_dur_cat         0.2594  0.0330    1.30           1.21-1.38
+htn_med            0.1152  0.0678    1.12           0.98-1.28
+prior_cvd          0.3823  0.0736    1.47           1.27-1.69
+
+======================================================================
+MODEL B (+ HbA1c, eGFR)   predictors: 11  (age, sbp, waist, hba1c, egfr, sex_f, smoke_former, smoke_current, dm_dur_cat, htn_med, prior_cvd)
+======================================================================
+
+LASSO (C=0.6158) retains: age, dm_dur_cat, egfr, hba1c, htn_med, prior_cvd, sbp, sex_f, smoke_current, smoke_former, waist
+LASSO shrinks to zero      : (none)
+
+AUC apparent                     : 0.743
+AUC 10-fold cross-validated      : 0.740
+AUC optimism-corrected           : 0.739 (95% CI 0.730-0.751)
+Optimism                         : 0.0033
+Calibration slope (bootstrap)    : 0.979
+Calibration-in-the-large         : +0.000
+Brier score                      : 0.1506
+Uniform shrinkage factor         : 0.979
+
+  KPI: AUC >=0.72 -> MET; CI lower bound >0.68 -> MET; slope 0.85-1.15 -> MET
+
+--- POOLED COEFFICIENTS (Rubin's rules across 2 imputations) ---
+term                 beta      SE      OR              95% CI
+age                0.0504  0.0156    1.05           1.02-1.08
+age'1             -0.0187  0.0530    0.98           0.88-1.09
+age'2              0.0749  0.1239    1.08           0.85-1.37
+sbp                0.0017  0.0069    1.00           0.99-1.02
+sbp'1             -0.0054  0.0285    0.99           0.94-1.05
+sbp'2              0.0256  0.0808    1.03           0.88-1.20
+waist              0.0138  0.0022    1.01           1.01-1.02
+hba1c              0.0962  0.0276    1.10           1.04-1.16
+egfr              -0.0032  0.0018    1.00           0.99-1.00
+sex_f             -0.3877  0.0615    0.68           0.60-0.77
+smoke_former       0.0514  0.0663    1.05           0.92-1.20
+smoke_current      0.4399  0.0842    1.55           1.32-1.83
+dm_dur_cat         0.1814  0.0396    1.20           1.11-1.30
+htn_med            0.0980  0.0706    1.10           0.96-1.27
+prior_cvd          0.3722  0.0741    1.45           1.25-1.68
+
+--- GRADIENT BOOSTING BENCHMARK (Version A predictors) ---
+AUC gradient boosting (10-fold)  : 0.725
+AUC logistic + splines (10-fold) : 0.739
+Difference                       : -0.014
+Reported as found. A points table a clinician can compute without a
+device is worth more than a decimal of AUC that needs a server.
+
+======================================================================
+EXAMINATION THRESHOLDS (Version A, cross-validated predictions)
+======================================================================
+ thresh   sens   spec    PPV    NPV   tested    NNT
+  0.100   0.93   0.29   0.27   0.93    76.0%    3.6
+  0.125   0.88   0.41   0.30   0.92    65.8%    3.3
+  0.150   0.82   0.49   0.32   0.91    57.7%    3.1
+  0.175   0.78   0.56   0.34   0.90    51.3%    2.9
+  0.200   0.73   0.63   0.36   0.89    45.2%    2.8
+  0.225   0.68   0.68   0.38   0.88    40.0%    2.6
+  0.250   0.63   0.73   0.40   0.87    35.5%    2.5
+  0.275   0.58   0.77   0.42   0.86    31.2%    2.4
+  0.300   0.53   0.80   0.43   0.86    27.5%    2.3
+  0.325   0.49   0.83   0.46   0.85    23.9%    2.2
+  0.350   0.44   0.86   0.48   0.84    20.6%    2.1
+  0.375   0.39   0.88   0.49   0.83    17.7%    2.0
+  0.400   0.34   0.90   0.50   0.82    15.1%    2.0
+  0.425   0.29   0.92   0.51   0.82    12.9%    2.0
+  0.450   0.25   0.93   0.53   0.81    10.8%    1.9
+  0.475   0.22   0.95   0.54   0.81     8.9%    1.8
+  0.500   0.17   0.96   0.55   0.80     6.9%    1.8
+  0.525   0.13   0.97   0.55   0.79     5.2%    1.8
+  0.550   0.10   0.98   0.57   0.79     4.1%    1.8
+
+Operating point (sensitivity >=0.85, least burden): threshold 0.125
+  sensitivity 0.88, specificity 0.41, examine 65.8% of patients, NNT 3.3
+  KPI burden <=40% -> NOT MET
+
+======================================================================
+DECISION CURVE - score versus the rules clinicians already use
+======================================================================
+ thresh     score  test all  diabetes   age>=60   none
+  0.050    0.1839    0.1836    0.0459    0.1540  0.000
+  0.075    0.1636    0.1615    0.0434    0.1436  0.000
+  0.100    0.1472    0.1382    0.0407    0.1326  0.000
+  0.125    0.1310    0.1136    0.0379    0.1210  0.000
+  0.150    0.1154    0.0875    0.0349    0.1087  0.000
+  0.175    0.1038    0.0599    0.0317    0.0956  0.000
+  0.200    0.0916    0.0305    0.0283    0.0817  0.000
+  0.225    0.0802   -0.0008    0.0247    0.0670  0.000
+  0.250    0.0711   -0.0342    0.0209    0.0512  0.000
+  0.275    0.0608   -0.0698    0.0168    0.0344  0.000
+  0.300    0.0526   -0.1080    0.0124    0.0164  0.000
+  0.325    0.0464   -0.1491    0.0077   -0.0030  0.000
+  0.350    0.0404   -0.1933    0.0026   -0.0239  0.000
+  0.375    0.0324   -0.2410   -0.0029   -0.0464  0.000
+  0.400    0.0254   -0.2927   -0.0089   -0.0708  0.000
+  0.425    0.0194   -0.3489   -0.0153   -0.0973  0.000
+  0.450    0.0151   -0.4102   -0.0224   -0.1263  0.000
+  0.475    0.0117   -0.4774   -0.0301   -0.1580  0.000
+  0.500    0.0068   -0.5512   -0.0386   -0.1928  0.000
+  0.525    0.0031   -0.6329   -0.0480   -0.2314  0.000
+  0.550    0.0017   -0.7236   -0.0584   -0.2742  0.000
+  0.575   -0.0004   -0.8250   -0.0701   -0.3220  0.000
+  0.600   -0.0023   -0.9390   -0.0832   -0.3759  0.000
+
+Score exceeds 'test everyone with diabetes' at 23/23 thresholds
+Score exceeds 'test everyone aged >=60'      at 23/23 thresholds
+
+DECISIVE KPI: MET
+
+======================================================================
+TRANSPORTABILITY ACROSS SUBGROUPS (Version A)
+======================================================================
+subgroup                n  events    prev     AUC
+diabetes             1130     409   36.2%   0.690
+no diabetes          6947    1402   20.2%   0.734
+women                4033     753   18.7%   0.732
+men                  4047    1060   26.2%   0.734
+age 40-59            3722     413   11.1%   0.659
+age >=60             4358    1400   32.1%   0.677
+obese (BMI>=30)      2657     614   23.1%   0.711
+non-obese            5295    1147   21.7%   0.753
+
+Cases missed entirely by 'test everyone with diabetes': 1402 of 1813 (77.3%).
+These are the participants the current heuristic cannot reach at any
+threshold, and they are the clinical argument for a score.
+
+======================================================================
+SECONDARY ENDPOINTS AND SENSITIVITY ANALYSES (Version A predictors)
+======================================================================
+endpoint                              n  events     AUC
+composite LED (primary)            8080    1813   0.739
+PAD alone (ABI<0.90)               7477     586   0.791
+neuropathy alone                   7906    1381   0.727
+high-risk foot (both)              7303     154   0.827
+ABI abnormal (<0.90 or >1.40)      7539     785   0.766
+neuropathy >=2 sites               7906     523   0.740
+neuropathy both feet               7762     489   0.735
+
+======================================================================
+POINTS TABLES (Sullivan method, derived from all-linear models)
+======================================================================
+
+Version A (no laboratory)   B = 0.2816 (five years of age = one point)
+         term  per_unit  points
+          age        10       2
+smoke_current         1       2
+        waist        15       1
+   dm_dur_cat         1       1
+        sex_f         1      -1
+    prior_cvd         1       1
+          sbp        20       0
+ smoke_former         1       0
+      htn_med         1       0
+  integer score range      : 11 to 29
+  AUC of the integer score : 0.729  (continuous model 0.739; cost of rounding +0.010)
+
+Version B (+ HbA1c, eGFR)   B = 0.2675 (five years of age = one point)
+         term  per_unit  points
+          age        10       2
+smoke_current         1       2
+        waist        15       1
+   dm_dur_cat         1       1
+        sex_f         1      -1
+    prior_cvd         1       1
+          sbp        20       0
+ smoke_former         1       0
+         egfr        15       0
+        hba1c         1       0
+      htn_med         1       0
+  integer score range      : 11 to 29
+  AUC of the integer score : 0.729  (continuous model 0.740; cost of rounding +0.011)
+
+--- OBSERVED RISK BY SCORE BAND (Version A) ---
+      band       n  events    risk
+      9-11       5       0    0.0%
+      >=12    8075    1813   22.5%

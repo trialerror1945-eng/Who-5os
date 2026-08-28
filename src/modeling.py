@@ -111,12 +111,17 @@ def round_binary(df, binary_cols):
 # Metrics
 # --------------------------------------------------------------------------
 
-def fit_logistic(X, y, C=1e6, penalty=None):
-    kw = dict(max_iter=2000)
-    if penalty == "l1":
-        m = LogisticRegression(penalty="l1", C=C, solver="liblinear", **kw)
+def fit_logistic(X, y, C=None, l1=False):
+    """Maximum-likelihood logistic fit, or an L1-penalised one when l1=True.
+
+    C=np.inf is the unpenalised fit; scikit-learn deprecated penalty=None in
+    favour of it.
+    """
+    if l1:
+        m = LogisticRegression(l1_ratio=1, C=C, solver="saga",
+                               penalty="elasticnet", max_iter=5000)
     else:
-        m = LogisticRegression(penalty=None, solver="lbfgs", **kw)
+        m = LogisticRegression(C=np.inf, solver="lbfgs", max_iter=2000)
     m.fit(X, y)
     return m
 
@@ -127,14 +132,24 @@ def calibration_slope_intercept(y, lp):
     Slope below 1 means the predictions are too extreme - the usual signature
     of overfitting.
     """
-    m = LogisticRegression(penalty=None, solver="lbfgs", max_iter=2000)
+    m = LogisticRegression(C=np.inf, solver="lbfgs", max_iter=2000)
     m.fit(lp.reshape(-1, 1), y)
     slope = float(m.coef_[0][0])
-    # Calibration-in-the-large: intercept with the slope held at 1.
-    off = LogisticRegression(penalty=None, solver="lbfgs", max_iter=2000)
-    off.fit(np.zeros((len(y), 1)), y)  # placeholder, replaced below
-    citl = float(np.log(y.mean() / (1 - y.mean()))
-                 - np.mean(lp))
+
+    # Calibration-in-the-large is the intercept of a model that carries the
+    # linear predictor as a fixed offset - i.e. the a solving
+    # mean(sigmoid(a + lp)) = mean(y). Comparing logit(mean(y)) with mean(lp)
+    # is not the same quantity, because the logit of an average is not the
+    # average of logits.
+    lo, hi = -10.0, 10.0
+    target = float(y.mean())
+    for _ in range(200):
+        mid = (lo + hi) / 2
+        if float(np.mean(1 / (1 + np.exp(-(mid + lp))))) < target:
+            lo = mid
+        else:
+            hi = mid
+    citl = (lo + hi) / 2
     return slope, citl
 
 
