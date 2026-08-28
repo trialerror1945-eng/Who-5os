@@ -29,7 +29,29 @@ EXPECTED_ABPI_PRESENT = {"LEXLABPI": 2346, "LEXRABPI": 2339}
 EXPECTED_ABPI_MISSING = {"LEXLABPI": 740, "LEXRABPI": 747}
 EXPECTED_LEXPN_N = 3086
 
+# A SAS XPORT numeric zero is an IBM hex float that pandas decodes to
+# 5.397605346934028e-79 rather than to 0.0. Nothing NHANES measures is that
+# small, so anything below this tolerance is that artefact.
+XPORT_ZERO_TOL = 1e-30
+
 failures = []
+
+
+def normalise_xport_zero(df):
+    """Snap XPORT's decoded-zero artefact to a true zero.
+
+    This is a fifth silent data trap on top of the four already documented.
+    It does not raise, and it does not even change the composite endpoint,
+    because 5.4e-79 >= 1 is false just as 0 >= 1 is false. What it does break
+    is every equality test, every recode keyed on == 0, and any tabulation of
+    "no insensate sites" - which is how it was found here, as 2269 zeros that
+    matched no expected level.
+    """
+    out = df.copy()
+    for c in out.columns:
+        if pd.api.types.is_numeric_dtype(out[c]):
+            out[c] = out[c].mask(out[c].abs() < XPORT_ZERO_TOL, 0.0)
+    return out
 
 
 def check(label, got, want):
@@ -48,7 +70,7 @@ def main():
             return 1
 
     print("LEXPN_C - monofilament (peripheral neuropathy)")
-    pn = pd.read_sas(pn_path, format="xport")
+    pn = normalise_xport_zero(pd.read_sas(pn_path, format="xport"))
     check("row count", len(pn), EXPECTED_LEXPN_N)
 
     for var in EXPECTED_PN:
@@ -74,7 +96,7 @@ def main():
               EXPECTED_PN_MISSING[var])
 
     print("\nLEXAB_C - ankle-brachial pressure index")
-    ab = pd.read_sas(ab_path, format="xport")
+    ab = normalise_xport_zero(pd.read_sas(ab_path, format="xport"))
     check("row count", len(ab), EXPECTED_LEXPN_N)
     for var, want in EXPECTED_ABPI_PRESENT.items():
         if var not in ab.columns:

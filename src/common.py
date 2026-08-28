@@ -25,13 +25,28 @@ REFUSED_DK = {
 }
 
 
+# A SAS XPORT numeric zero is an IBM hex float that pandas decodes to
+# 5.397605346934028e-79 rather than 0.0. Nothing NHANES measures is that
+# small, so anything under this tolerance is that artefact and nothing else.
+XPORT_ZERO_TOL = 1e-30
+
+
 def read_xpt(cycle, name):
-    """Read one NHANES transport file; return None if absent."""
+    """Read one NHANES transport file; return None if absent.
+
+    Zeros are normalised on the way in. Left alone they are a silent trap:
+    5.4e-79 fails every == 0 test while still behaving like zero in
+    arithmetic, so a recode keyed on equality drops thousands of participants
+    into a category that was never meant to exist, without raising anything.
+    """
     path = os.path.join(RAW, cycle, f"{name}.XPT")
     if not os.path.exists(path):
         return None
     df = pd.read_sas(path, format="xport")
     df.columns = [c.upper() for c in df.columns]
+    for c in df.columns:
+        if pd.api.types.is_numeric_dtype(df[c]):
+            df[c] = df[c].mask(df[c].abs() < XPORT_ZERO_TOL, 0.0)
     if "SEQN" in df.columns:
         df["SEQN"] = df["SEQN"].astype("int64")
         # A duplicated SEQN would silently multiply rows at every merge.
