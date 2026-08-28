@@ -63,6 +63,10 @@ LAB = [
     ("BIO",   ["LAB18", "L40", "L40_B", "L40_C"]),           # biochemistry -> creatinine
     ("TCHOL", ["LAB13", "L13", "L13_B", "L13_C"]),           # total cholesterol
     ("GHB",   ["LAB10", "L10", "L10_B", "GHB_C"]),           # HbA1c
+    # Lower Extremity Disease questionnaire: Rose/Edinburgh claudication.
+    # The CDQ file for these cycles turned out to be the angina questionnaire
+    # (chest pain), not leg symptoms - leg pain lives here instead.
+    ("LEQ",   ["LEQ"]),
 ]
 
 # Public-use linked mortality files, follow-up through 31 Dec 2019.
