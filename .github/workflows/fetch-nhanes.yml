@@ -1,9 +1,19 @@
 name: Fetch NHANES raw data
 
-# Manual only. The runner has the open internet access that the analysis
-# sandbox does not, so this is where the CDC files are pulled from.
+# The runner has the open internet access that the analysis sandbox does not,
+# so this is where the CDC files are pulled from.
+#
+# The push trigger is filtered to the fetcher's own sources. That matters:
+# this job commits into data/raw on the same branch, and an unfiltered trigger
+# would make it re-run on its own commit forever.
 on:
   workflow_dispatch:
+  push:
+    branches: [claude/ml-healthcare-research-ewq189]
+    paths:
+      - 'tools/fetch_nhanes.py'
+      - 'tools/verify_raw.py'
+      - '.github/workflows/fetch-nhanes.yml'
 
 permissions:
   contents: write
