@@ -56,9 +56,12 @@ def main():
             print(f"  FAIL  {var} absent from file")
             failures.append(var)
             continue
-        vc = pn[var].value_counts(dropna=True)
+        # Counted by direct equality rather than value_counts().get(). Series.get
+        # does label lookup, and a 0.0 key against a float index resolves
+        # unreliably - it reported zero for the 2269 genuine zeros while every
+        # other level matched.
         for value, want in counts.items():
-            got = int(vc.get(float(value), 0))
+            got = int((pn[var] == value).sum())
             check(f"{var} == {value}", got, want)
         check(f"{var} missing", int(pn[var].isna().sum()),
               EXPECTED_PN_MISSING[var])
