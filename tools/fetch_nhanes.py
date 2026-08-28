@@ -54,6 +54,7 @@ CORE = [
     ("SMQ",   ["SMQ"]),                   # smoking
     ("BPQ",   ["BPQ"]),                   # hypertension history / treatment
     ("MCQ",   ["MCQ"]),                   # cardiovascular history
+    ("CDQ",   ["CDQ"]),                   # Rose claudication / leg symptoms
 ]
 
 # Laboratory files, for Version B only. Names are the least stable of all.
