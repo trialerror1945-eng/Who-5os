@@ -28,10 +28,12 @@ import urllib.request
 
 OUT = os.path.join("data", "raw")
 
-# CDC serves NHANES from two layouts; the second is the modern one.
+# CDC serves NHANES from two layouts. The modern one is tried first because
+# the legacy path now answers with an HTML interstitial rather than a 404,
+# which is indistinguishable from success on status code alone.
 URL_PATTERNS = [
-    "https://wwwn.cdc.gov/Nchs/Nhanes/{cycle}/{fname}.XPT",
     "https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/{year}/DataFiles/{fname}.xpt",
+    "https://wwwn.cdc.gov/Nchs/Nhanes/{cycle}/{fname}.XPT",
 ]
 
 # (cycle folder, file suffix, first year - used by the modern URL layout)
@@ -71,7 +73,15 @@ MORT = [
     ("2003-2004", "NHANES_2003_2004_MORT_2019_PUBLIC.dat"),
 ]
 
-UA = {"User-Agent": "Mozilla/5.0 (NHANES LED triage study; research script)"}
+# CDC's edge rejects requests that do not look like a browser, and a bare
+# urllib User-Agent is the usual reason a fetch returns markup instead of data.
+UA = {
+    "User-Agent": ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+                   "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"),
+    "Accept": "*/*",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Referer": "https://wwwn.cdc.gov/nchs/nhanes/",
+}
 
 
 def _get(url, timeout=120, retries=3):
@@ -92,6 +102,29 @@ def _get(url, timeout=120, retries=3):
     return None
 
 
+def is_xport(data):
+    """True only for a genuine SAS XPORT v5 file.
+
+    Size alone is not evidence. When CDC declines to serve a file it returns an
+    HTML interstitial that is comfortably larger than any size threshold, and
+    every such page is byte-identical - which is how a first run 'downloaded'
+    38 files that shared one SHA-256. An XPORT file always opens with the
+    library header record, so check that instead.
+    """
+    return data is not None and data[:60].startswith(
+        b"HEADER RECORD*******LIBRARY HEADER RECORD")
+
+
+def is_mort(data):
+    """True for a linked-mortality fixed-width record file (ASCII, no markup)."""
+    if data is None or len(data) < 1000:
+        return False
+    head = data[:200].lstrip()
+    if head[:1] in (b"<", b"{"):
+        return False
+    return all(c in b"0123456789 .-\r\n" for c in data[:200])
+
+
 def fetch_xpt(cycle, suffix, year, candidates, logical, manifest):
     dest = os.path.join(OUT, cycle, f"{logical}.XPT")
     if os.path.exists(dest) and os.path.getsize(dest) > 1000:
@@ -110,7 +143,11 @@ def fetch_xpt(cycle, suffix, year, candidates, logical, manifest):
         for pattern in URL_PATTERNS:
             url = pattern.format(cycle=cycle, year=year, fname=fname)
             data = _get(url)
-            if data is None or len(data) < 1000:
+            if data is None:
+                continue
+            if not is_xport(data):
+                print(f"      not XPORT ({len(data)} B, starts "
+                      f"{data[:24]!r}) - {url}")
                 continue
             os.makedirs(os.path.dirname(dest), exist_ok=True)
             with open(dest, "wb") as f:
@@ -133,7 +170,10 @@ def fetch_mortality(cycle, fname, manifest):
         return True
     url = f"{MORT_BASE}/{fname}"
     data = _get(url)
-    if data is None or len(data) < 1000:
+    if not is_mort(data):
+        if data is not None:
+            print(f"      not a mortality file ({len(data)} B, starts "
+                  f"{data[:24]!r})")
         return False
     os.makedirs(os.path.dirname(dest), exist_ok=True)
     with open(dest, "wb") as f:

@@ -33,6 +33,20 @@ jobs:
       - name: Install parser
         run: pip install --quiet pandas
 
+      - name: Probe CDC response shape
+        continue-on-error: true
+        run: |
+          for u in \
+            "https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2003/DataFiles/LEXAB_C.xpt" \
+            "https://wwwn.cdc.gov/Nchs/Nhanes/2003-2004/LEXAB_C.XPT" ; do
+            echo "=== $u"
+            curl -sS -D - -o /tmp/probe.bin --max-time 60 \
+              -A "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36" \
+              "$u" | head -20
+            echo "--- bytes: $(stat -c%s /tmp/probe.bin)"
+            head -c 300 /tmp/probe.bin | tr -c '[:print:]\n' '.' ; echo
+          done
+
       - name: Download NHANES 1999-2004 files
         run: python3 tools/fetch_nhanes.py
 
